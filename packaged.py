@@ -49,6 +49,7 @@ def health(port, vault):
 
 def main():
     parser = argparse.ArgumentParser()
+    parser.add_argument('--url-only', action='store_true')
     parser.add_argument('--mcp', action='store_true')
     parser.add_argument('--serve', action='store_true')
     parser.add_argument('--vault', default=str(default_vault()))
@@ -78,7 +79,8 @@ def main():
     ports = range(args.port, args.port + 10)
     for port in ports:
         if health(port, vault):
-            webbrowser.open('http://127.0.0.1:%d' % port)
+            if args.url_only: print('http://127.0.0.1:%d' % port, flush=True)
+            else: webbrowser.open('http://127.0.0.1:%d' % port)
             return 0
     vault.mkdir(parents=True, exist_ok=True)
     for port in ports:
@@ -91,7 +93,8 @@ def main():
                 env={**os.environ, 'PYINSTALLER_RESET_ENVIRONMENT': '1'})
         for _ in range(50):
             if health(port, vault):
-                webbrowser.open('http://127.0.0.1:%d' % port)
+                if args.url_only: print('http://127.0.0.1:%d' % port, flush=True)
+                else: webbrowser.open('http://127.0.0.1:%d' % port)
                 return 0
             if process.poll() is not None:
                 break
