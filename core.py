@@ -212,13 +212,15 @@ class Store:
             self.event(db, 'reference', item['id'], style, actor, 'Linked reference: '+title)
         return item
 
-    def attach_screenshot(self, filename, image, style, category, focus='', game_id=''):
+    def attach_screenshot(self, filename, image, style, category, focus='', game_id='', assistant='Codex'):
         """Persist the image and an explicit user-authorized learning task atomically."""
         self.style(style)
         if category not in CATEGORIES:
             raise ValueError('Choose a style section.')
         if game_id and self.game(game_id)['style'] != style:
             raise ValueError('Game belongs to the other style.')
+        if assistant not in ('Codex', 'Claude Desktop'):
+            raise ValueError('Choose Codex or Claude Desktop.')
         focus=clean(focus,3000)
         filename=Path(clean(filename,200)).name or 'Screenshot'
         if not isinstance(image,str) or len(image)>5600000:
@@ -256,7 +258,7 @@ class Store:
             'If the note save fails or the image cannot be read, do not mark it Done. Avoid duplicate additions if resumed.'
         )
         ref=dict(id=ref_id,title=filename,style=style,category=category,path=str(p),note=focus or 'Screenshot to learn from.',kind='file',revision=1,updated=time.time())
-        task=dict(id=task_id,title='Learn '+CATEGORIES[category].lower()+' from '+filename,style=style,game_id=game_id,owner='Codex',status='To do',objective=objective,result='',revision=1,updated=time.time())
+        task=dict(id=task_id,title='Learn '+CATEGORIES[category].lower()+' from '+filename,style=style,game_id=game_id,owner=assistant,status='To do',objective=objective,result='',revision=1,updated=time.time())
         with self.lock():
             p.parent.mkdir(exist_ok=True)
             try:
@@ -269,7 +271,7 @@ class Store:
                     db.execute('INSERT INTO tasks VALUES(:id,:title,:style,:game_id,:owner,:status,:objective,:result,:revision,:updated)',task)
                     db.execute('INSERT INTO screenshots VALUES(?,?,?)',(ref_id,task_id,game_id))
                     self.event(db,'reference',ref_id,style,'You','Attached screenshot: '+filename)
-                    self.event(db,'task',task_id,style,'You','Screenshot ready for Codex to learn; preferences not yet extracted.')
+                    self.event(db,'task',task_id,style,'You','Screenshot ready for '+assistant+' to learn; preferences not yet extracted.')
             except BaseException:
                 if p.exists(): p.unlink()
                 raise
