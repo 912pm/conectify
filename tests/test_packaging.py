@@ -53,3 +53,19 @@ class PackagingTests(unittest.TestCase):
                 import_previous_vault(target)
                 import_previous_vault(target)
             self.assertEqual(Store(target).read_note('cash-grab', 'ui')['text'], 'Large buttons')
+
+    def test_health_bypasses_proxy_configuration(self):
+        import threading
+        from app import serve
+        from packaged import health
+        with tempfile.TemporaryDirectory() as tmp:
+            server = serve(tmp, 0)
+            worker = threading.Thread(target=server.serve_forever, daemon=True)
+            worker.start()
+            try:
+                with patch.dict('os.environ', {'http_proxy': 'http://127.0.0.1:1', 'no_proxy': ''}):
+                    self.assertTrue(health(server.server_port, Path(tmp).resolve()))
+                    self.assertFalse(health(server.server_port, Path(tmp) / 'other'))
+            finally:
+                server.shutdown()
+                server.server_close()
