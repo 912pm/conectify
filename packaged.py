@@ -6,7 +6,7 @@ from pathlib import Path
 import subprocess
 import sys
 import time
-from urllib.request import urlopen
+from http.client import HTTPConnection
 import webbrowser
 from core import Store
 from app import serve
@@ -34,12 +34,17 @@ def import_previous_vault(vault):
 
 
 def health(port, vault):
+    # Local IPC must bypass system/network proxy settings.
+    connection = HTTPConnection('127.0.0.1', port, timeout=.5)
     try:
-        with urlopen('http://127.0.0.1:%d/api/health' % port, timeout=.5) as response:
-            data = json.load(response)
-            return data.get('app') == 'conectify' and data.get('vault') == str(vault)
+        connection.request('GET', '/api/health')
+        response = connection.getresponse()
+        data = json.loads(response.read())
+        return response.status == 200 and data.get('app') == 'conectify' and data.get('vault') == str(vault)
     except Exception:
         return False
+    finally:
+        connection.close()
 
 
 def main():
@@ -57,7 +62,13 @@ def main():
         run(Store(vault), args.client)
         return 0
     if args.serve:
-        server = serve(vault, args.port)
+        try:
+            server = serve(vault, args.port)
+        except OSError as error:
+            # A windowed PyInstaller exception opens a modal crash dialog, which
+            # prevents the launcher from observing exit and trying another port.
+            print('Conectify server could not start: ' + str(error), file=sys.stderr)
+            return 1
         try:
             server.serve_forever()
         finally:
@@ -87,7 +98,11 @@ def main():
             time.sleep(.1)
         if process.poll() is None:
             process.terminate()
-            process.wait(timeout=5)
+            try:
+                process.wait(timeout=2)
+            except subprocess.TimeoutExpired:
+                process.kill()
+                process.wait(timeout=2)
     raise RuntimeError('Conectify could not start. See ' + str(vault / 'server.log'))
 
 if __name__ == '__main__':
