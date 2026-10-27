@@ -1,6 +1,6 @@
 # Conectify
 
-A local design-memory vault for Claude Desktop and Codex. Separate **Cash grab** and **Serious game** preferences, with game-specific exceptions, linked references, and shared progress.
+A local design-memory vault for Claude Desktop and Codex. Separate **Cash grab** and **Serious game** preferences Specifically for Roblox game Developing, with game-specific exceptions, linked references, and shared progress.
 
 ## Install on macOS
 
