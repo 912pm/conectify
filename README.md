@@ -1,12 +1,11 @@
 # Conectify
 
-A local design-memory vault for Claude Desktop and Codex. Separate **Cash grab** and **Serious game** preferences Specifically for Roblox game Developing, with game-specific exceptions, linked references, and shared progress.
+**Built primarily for Roblox game development.** Conectify is a local design-memory app for Claude Desktop and Codex, helping you reuse art direction, UI preferences, and references across Roblox games. Separate **Cash grab** and **Serious game** preferences, with game-specific exceptions, linked references, and shared progress.
 
 ## Install on macOS
 
 The standalone Apple Silicon `.dmg` includes Python. Drag **Conectify.app** to
-Applications, eject the disk image, and open the installed app. It starts a local
-service and opens the interface in your default browser. This personal build is
+Applications, eject the disk image, and open the installed app. It opens its own macOS application window, with a Dock icon and native file dialogs. A local service keeps the vault available to both AI clients. This personal build is
 ad-hoc signed, not Apple-notarized.
 
 The packaged app stores its vault in
@@ -61,9 +60,9 @@ The UI reads local changes every two seconds while visible. This polling uses no
 
 Use **Learn from screenshot** on the style overview, a preference section, or References. Choose/drop a PNG, JPEG, or WebP up to 4 MB, or paste an image into the dialog. Select the section and whether it applies to all games of the current type or one specific game. Optionally explain what you like.
 
-Conectify saves an image copy in `vault/attachments/` and creates a learning task assigned to Codex. Click **Copy request for Codex**, then paste and send it in Codex Desktop. Codex uses the existing image-reading and note-saving MCP tools. It is instructed to preserve existing rules, block on conflicts or ambiguity, and avoid guessing animation timing from a still image. Your request authorizes saving the supported preferences in the chosen scope.
+Conectify saves an image copy in `vault/attachments/` and creates a learning task assigned to your choice of **Codex** or **Claude Desktop**. Choose the AI under **Learn with**, then copy and send the prepared request in that app. The selected AI uses the existing image-reading and note-saving MCP tools. It is instructed to preserve existing rules, block on conflicts or ambiguity, and avoid guessing animation timing from a still image. Your request authorizes saving the supported preferences in the chosen scope.
 
-Uploading alone does not analyze the image, change preferences, or wake Codex. The UI explicitly shows that the task is waiting. Results appear when Codex saves them. This uses your existing Codex account and its usage allowance, not a separate API key. The image is sent to the model provider when Codex reads it.
+Uploading alone does not analyze the image, change preferences, or wake either AI. The UI explicitly shows that the task is waiting. Results appear when your selected AI saves them. This uses your selected AI app’s account and usage allowance, not a separate API key. The image is sent to that model provider when the AI reads it.
 
 Uploaded screenshots are included in vault backups; externally linked reference originals still are not. Game-specific screenshot references are excluded from other games' context.
 
@@ -100,7 +99,7 @@ The server binds to loopback only, rejects foreign host/origin requests, and req
 
 No API keys are required by Conectify. Claude/Codex use your own accounts and normal tool permissions. This build does not add Roblox or Blender API credentials.
 
-The launcher starts one local background server. To stop it, find its PID with `lsof -iTCP:4317 -sTCP:LISTEN` and terminate that specific PID. Closing the browser alone does not stop the server. A native tray app, cloud sync, recursive search, automatic AI tagging, and automatic agent wakeups are not included.
+The launcher starts one local background server. To stop it, find its PID with `lsof -iTCP:4317 -sTCP:LISTEN` and terminate that specific PID. Closing the native window hides it and preserves your draft; click the Dock icon to reopen it. Quit Conectify with Command-Q. The local service stays available to AI clients after the window closes. A native tray app, cloud sync, recursive search, automatic AI tagging, and automatic agent wakeups are not included.
 
 ## Verification
 
