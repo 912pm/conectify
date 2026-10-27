@@ -14,7 +14,7 @@ import threading
 import time
 import uuid
 
-STYLES = {'cash-grab': 'Cash grab', 'serious-game': 'Serious game'}
+STYLES = {'cash-grab': 'Simulator & Incremental', 'serious-game': 'Signature Games'}
 CATEGORIES = {'art': 'Art style', 'ui': 'Menus & buttons', 'animation': 'Animations', 'feel': 'Controls & feedback'}
 STATUSES = ['To do', 'Working', 'Blocked', 'Ready for review', 'Done']
 MAX_TEXT = 60000
