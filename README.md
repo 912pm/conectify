@@ -1,6 +1,6 @@
 # Conectify
 
-**Built primarily for Roblox game development.** Conectify is a local design-memory app for Claude Desktop and Codex, helping you reuse art direction, UI preferences, and references across Roblox games. Separate **Cash grab** and **Serious game** preferences, with game-specific exceptions, linked references, and shared progress.
+**Built primarily for Roblox game development.** Conectify is a local design-memory app for Claude Desktop and Codex, helping you reuse art direction, UI preferences, and references across Roblox games. Separate **Simulator & Incremental** and **Signature Games** preferences, with game-specific exceptions, linked references, and shared progress.
 
 ## Install on macOS
 
@@ -28,7 +28,7 @@ Source mode stores data in a local `vault/` folder, which is excluded from Git.
 
 ## First steps
 
-1. Choose **Cash grab** or **Serious game**.
+1. Choose **Simulator & Incremental** or **Signature Games**.
 2. Open **Art style**, **Menus & buttons**, **Animations**, or **Controls & feedback**. Write only preferences you want remembered. Save them.
 3. In **References**, link an existing file or folder and say what to reuse. Folder browsing loads one directory at a time. Filename search applies to the current directory, not the entire recursive library.
 4. Add a game in **Games**. Select it under **Apply to** to write exceptions. Shared preferences remain unchanged.
@@ -121,3 +121,21 @@ installers as GitHub Release assets rather than committing them to Git.
 
 No project license file is included. Third-party components in packaged builds
 retain their own licenses and required notices.
+
+## Style categories
+
+- **Simulator & Incremental**: straightforward progression-focused Roblox experiences, including simulators and +1 games.
+- **Signature Games**: more ambitious, polished projects with a distinctive visual identity and gameplay.
+
+Internal style IDs remain unchanged for compatibility with existing vaults.
+
+## Local privacy
+
+The packaged app uses a loopback service internally. `127.0.0.1` identifies the
+current computer, not the owner's public IP address. The service listens only
+on that computer. No personal vaults or AI configuration files are distributed
+with the app. Local file paths remain necessary for linked references and AI
+connections; ordinary path displays abbreviate the Mac home folder as `~`.
+Advanced connection settings contain full paths so clients can actually run.
+Vault backups contain your notes, images, and reference paths: treat them as
+private. Files you explicitly ask an AI to read may be sent to its provider.
