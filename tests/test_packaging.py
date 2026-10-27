@@ -69,3 +69,14 @@ class PackagingTests(unittest.TestCase):
             finally:
                 server.shutdown()
                 server.server_close()
+
+    def test_screenshot_assistant_choice(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            store = Store(tmp)
+            png = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+a7V8AAAAASUVORK5CYII='
+            for assistant in ('Codex', 'Claude Desktop'):
+                result = store.attach_screenshot('example.png', png, 'serious-game', 'ui', assistant=assistant)
+                self.assertEqual(result['task']['owner'], assistant)
+                self.assertIn(result['task']['id'], result['request'])
+            with self.assertRaises(ValueError):
+                store.attach_screenshot('example.png', png, 'serious-game', 'ui', assistant='Unknown')
